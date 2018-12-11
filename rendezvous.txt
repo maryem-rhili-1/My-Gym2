@@ -1,0 +1,2 @@
+medecin 2h disponible log1
+medecin 6h indisponible log2
