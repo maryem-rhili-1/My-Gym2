@@ -1,562 +1,653 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
+#include <gtk/gtkclist.h>
+
 #include <gtk/gtk.h>
 #include <string.h>
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
-#include "fonction.h"
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "admin.h"
 
 
-
-/*bienvenue
-char jour_disponibilites[10];
-char mois_disponibilites[10];
-char annees_disponibilites[10];
-*/
-
-char jour_disponibilites[50],mois_disponibilites[50],annees_disponibilites[50]; 
-char heure_disponibilites[50];
-gchar *nom,*prenom,*age,*poids,*taille,*maladie;
-gchar *g_jour_disponibilites;
-gchar *g_mois_disponibilites;
-gchar *g_annees_disponibilites;
-gchar *g_heure_disponibilites;
-int *index_row_selected;
-void on_button1_clicked (GtkWidget *objet_graphique,gpointer user_data)
+void
+on_button1_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
 {
-        GtkWidget *window_authentification,*window_getion_medecin;
-        window_authentification= lookup_widget(objet_graphique,"window_authentification");              
-        gtk_widget_hide(window_authentification);
-        window_getion_medecin=create_window_getion_medecin();
-        gtk_widget_show (window_getion_medecin);
+int x;	
+	GtkWidget *a ;
+        GtkWidget *b;
+        GtkWidget *c ;
+        GtkWidget *window1_admin;
+        GtkWidget *window2_admin;
+
+	char login[20],password[20];
+	
+	window1_admin= lookup_widget(objet_graphique,"window1_admin");
+        window2_admin= lookup_widget(objet_graphique,"window2_admin");
+      	
+
+	a=lookup_widget(objet_graphique,"entry1_admin");
+	b=lookup_widget(objet_graphique,"entry2_admin");
+	c=lookup_widget(objet_graphique,"label3_admin");
+	strcpy(login,gtk_entry_get_text(GTK_ENTRY(a)));
+	strcpy(password,gtk_entry_get_text(GTK_ENTRY(b)));
+	x =verifier(login,password);
+	
+	if(x==1){ 
+
+gtk_widget_hide(window1_admin);
+window2_admin=create_window2_admin();
+gtk_widget_show (window2_admin);
+
+}
+	else 
+	{ gtk_label_set_text(GTK_LABEL(c),"authentification non validée");}
+
+  
 }
 
 
-void on_button_Gerer_les_fiches_medicales_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
+void
+on_button2_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
 {
-        GtkWidget *window_getion_medecin,*window_fiche_medicale_medecin,*List_View;
-        window_getion_medecin= lookup_widget(objet_graphique,"window_getion_medecin");  
-        gtk_widget_hide(window_getion_medecin);
-        window_fiche_medicale_medecin=create_window_fiche_medicale_medecin();
-        gtk_widget_show (window_fiche_medicale_medecin);
-        List_View=lookup_widget(window_fiche_medicale_medecin,"treeview1");
-        afficher1(List_View);
-}
-
-
-void on_button_Gerer_les_rendez_vous_medecin_clicked (GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *window_getion_medecin,*List_View;
-        GtkWidget *window_rendez_vous_medecin;
-        window_getion_medecin= lookup_widget(objet_graphique,"window_getion_medecin");
-        window_rendez_vous_medecin=create_window_rendez_vous_medecin();
-        gtk_widget_show (window_rendez_vous_medecin);
-        gtk_widget_hide (window_getion_medecin);
-        List_View=lookup_widget(window_rendez_vous_medecin,"treeview2");
-        afficher2(List_View);
-}
-
-
-void on_button_Gerer_les_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *window_getion_medecin,*List_View;
-        GtkWidget *window_disponibilites_medecin;
-        window_getion_medecin=lookup_widget(objet_graphique,"window_getion_medecin");
-        window_disponibilites_medecin=create_window_disponibilites_medecin();
-        gtk_widget_show(window_disponibilites_medecin);
-        gtk_widget_hide(window_getion_medecin);
-        List_View=lookup_widget(window_disponibilites_medecin,"treeview3");
-        afficher3(List_View);
-}
-
-
-void on_button_ajouter_fiche_medicale_medecin_clicked (GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *window_ajouter_fiche_medicale_medecin,*window_fiche_medicale_medecin;
-        window_fiche_medicale_medecin= lookup_widget(objet_graphique,"window_fiche_medicale_medecin");  
-        gtk_widget_hide(window_fiche_medicale_medecin);
-        window_ajouter_fiche_medicale_medecin=create_window_ajouter_fiche_medicale_medecin();
-        gtk_widget_show (window_ajouter_fiche_medicale_medecin);
-}
-
-
-void on_button_supprimer_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *window_fiche_medicale_medecin;
-        GtkWidget *window_supprimer_fiche_medicale_medecin;
-        window_fiche_medicale_medecin= lookup_widget(objet_graphique,"window_fiche_medicale_medecin");
-        window_supprimer_fiche_medicale_medecin=create_window_supprimer_fiche_medicale_medecin();
-
-
-
-        GtkWidget *Widget_nom,*Widget_prenom,*Widget_age,*Widget_poids,*Widget_taille,*Widget_maladie,*window3;
-       
-
-        Widget_nom=lookup_widget(window_supprimer_fiche_medicale_medecin,"entry9");
-        Widget_prenom=lookup_widget(window_supprimer_fiche_medicale_medecin,"entry10");
-        Widget_age=lookup_widget(window_supprimer_fiche_medicale_medecin,"entry30");
-        Widget_poids=lookup_widget(window_supprimer_fiche_medicale_medecin,"entry31");
-        Widget_taille=lookup_widget(window_supprimer_fiche_medicale_medecin,"entry32");
-        Widget_maladie=lookup_widget(window_supprimer_fiche_medicale_medecin,"entry33");
-        gtk_entry_set_text(GTK_ENTRY (Widget_nom),_(nom));
-        gtk_entry_set_text(GTK_ENTRY (Widget_prenom),_(prenom));
-        gtk_entry_set_text(GTK_ENTRY (Widget_age),_(age));
-        gtk_entry_set_text(GTK_ENTRY (Widget_poids),_(poids));
-        gtk_entry_set_text(GTK_ENTRY (Widget_taille),_(taille));
-        gtk_entry_set_text(GTK_ENTRY (Widget_maladie),_(maladie));
-
-
-
-
-
-        gtk_widget_show(window_supprimer_fiche_medicale_medecin);
-        gtk_widget_hide(window_fiche_medicale_medecin);
-}
-
-
-void on_button_modifier_fiche_medicale_medecin_clicked(GtkWidget *objet_graphic,gpointer  user_data)
-{
-        
-
-        GtkWidget *Widget_nom,*Widget_prenom,*Widget_age,*Widget_poids,*Widget_taille,*Widget_maladie,*window3;
-        GtkWidget *window_modifier_fiche_medicale_medecin,*window_fiche_medicale_medecin,*List_View;
-        window_fiche_medicale_medecin=lookup_widget(objet_graphic,"window_fiche_medicale_medecin");
-        window_modifier_fiche_medicale_medecin=create_window_modifier_fiche_medicale_medecin();
-        Widget_nom=lookup_widget(window_modifier_fiche_medicale_medecin,"entry6");
-        Widget_prenom=lookup_widget(window_modifier_fiche_medicale_medecin,"entry7");
-        Widget_age=lookup_widget(window_modifier_fiche_medicale_medecin,"entry28");
-        Widget_poids=lookup_widget(window_modifier_fiche_medicale_medecin,"entry34");
-        Widget_taille=lookup_widget(window_modifier_fiche_medicale_medecin,"entry35");
-        Widget_maladie=lookup_widget(window_modifier_fiche_medicale_medecin,"entry36");
-        gtk_entry_set_text(GTK_ENTRY (Widget_nom),_(nom));
-        gtk_entry_set_text(GTK_ENTRY (Widget_prenom),_(prenom));
-        gtk_entry_set_text(GTK_ENTRY (Widget_age),_(age));
-        gtk_entry_set_text(GTK_ENTRY (Widget_poids),_(poids));
-        gtk_entry_set_text(GTK_ENTRY (Widget_taille),_(taille));
-        gtk_entry_set_text(GTK_ENTRY (Widget_maladie),_(maladie));
-
-
-
-
-gtk_widget_show (window_modifier_fiche_medicale_medecin);
-gtk_widget_hide( window_fiche_medicale_medecin);
-//List_View=lookup_widget(window_fiche_medicale_medecin,"treeview1");
-//afficher1(List_View);
-}
-
-
-void on_button_retour_affichage_fiche_medicale_medecin_clicked(GtkWidget *objet_graphic,gpointer  user_data)
-{
-        GtkWidget *window_getion_medecin,*window_fiche_medicale_medecin;
-        window_fiche_medicale_medecin= lookup_widget(objet_graphic,"window_fiche_medicale_medecin");
-        window_getion_medecin=create_window_getion_medecin();
-        gtk_widget_hide(window_fiche_medicale_medecin);
-        gtk_widget_show (window_getion_medecin);
-}
-
-
-
-
-
-void on_button_entrer_ajouter_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *a ,*b,*c,*d,*e,*f ,*window_fiche_medicale_medecin,*window_ajouter_fiche_medicale_medecin,*List_View;
-        char nom[20],prenom[20],age[100],poids[100],taille[100],maladie[20];
-        
-        a=lookup_widget(objet_graphique,"entry3");
-        b=lookup_widget(objet_graphique,"entry4");
-        c=lookup_widget(objet_graphique,"entry23");
-        d=lookup_widget(objet_graphique,"entry37");
-        e=lookup_widget(objet_graphique,"entry38");
-        f=lookup_widget(objet_graphique,"entry39");
-        strcpy(nom,gtk_entry_get_text(GTK_ENTRY(a)));
-        strcpy(prenom,gtk_entry_get_text(GTK_ENTRY(b)));
-        strcpy(age,gtk_entry_get_text(GTK_ENTRY(c)));
-        strcpy(poids,gtk_entry_get_text(GTK_ENTRY(d)));
-        strcpy(taille,gtk_entry_get_text(GTK_ENTRY(e)));
-        strcpy(maladie,gtk_entry_get_text(GTK_ENTRY(f)));
-        ajouter(nom,prenom,age,poids,taille,maladie);
-        window_ajouter_fiche_medicale_medecin= lookup_widget(objet_graphique,"window_ajouter_fiche_medicale_medecin");  
-        gtk_widget_hide(window_ajouter_fiche_medicale_medecin);
-        window_fiche_medicale_medecin=create_window_fiche_medicale_medecin();
-        
-        List_View=lookup_widget(window_fiche_medicale_medecin,"treeview1");
-        afficher1(List_View);
-        gtk_widget_show (window_fiche_medicale_medecin);
-}
-
-
-void on_button_retour_ajouter_fiche_medicale_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *window_fiche_medicale_medecin,*window_ajouter_fiche_medicale_medecin,*List_View;
-        window_ajouter_fiche_medicale_medecin= lookup_widget(objet_graphique,"window_ajouter_fiche_medicale_medecin");  
-        gtk_widget_hide(window_ajouter_fiche_medicale_medecin);
-        window_fiche_medicale_medecin=create_window_fiche_medicale_medecin();
-        gtk_widget_show (window_fiche_medicale_medecin);
-        List_View=lookup_widget(window_fiche_medicale_medecin,"treeview1");
-        afficher1(List_View);
-}
-
-
-void on_button_retour_rendez_vous_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *window_getion_medecin;
-        GtkWidget *window_rendez_vous_medecin;
-        window_rendez_vous_medecin= lookup_widget(objet_graphique,"window_rendez_vous_medecin");
-        window_getion_medecin=create_window_getion_medecin();
-        gtk_widget_show (window_getion_medecin);
-        gtk_widget_hide (window_rendez_vous_medecin);
-}
-
-
-void on_button_retour_modifier_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *window_fiche_medicale_medecin,*window_modifier_fiche_medicale_medecin,*List_View;
-        window_modifier_fiche_medicale_medecin= lookup_widget(objet_graphique,"window_modifier_fiche_medicale_medecin");
-        window_fiche_medicale_medecin=create_window_fiche_medicale_medecin();   
-        gtk_widget_hide(window_modifier_fiche_medicale_medecin);
-        gtk_widget_show (window_fiche_medicale_medecin);
-        List_View=lookup_widget(window_fiche_medicale_medecin,"treeview1");
-        afficher1(List_View);
-}
-
-
-void on_button_entrer_modifier_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *a , *b, *c, *d, *e, *f, *window_modifier_fiche_medicale_medecin,*List_View,*window_fiche_medicale_medecin;
-        char nouveau_nom[20],nouveau_prenom[20],nouveau_maladie[20],nouveau_poids[100],nouveau_taille[100],nouveau_age[100];
-        a=lookup_widget(objet_graphique,"entry6");
-        b=lookup_widget(objet_graphique,"entry7");
-        c=lookup_widget(objet_graphique,"entry28");
-        d=lookup_widget(objet_graphique,"entry34");
-        e=lookup_widget(objet_graphique,"entry35");
-        f=lookup_widget(objet_graphique,"entry36");
-        strcpy(nouveau_nom,gtk_entry_get_text(GTK_ENTRY(a)));
-        strcpy(nouveau_prenom,gtk_entry_get_text(GTK_ENTRY(b)));
-        strcpy(nouveau_age,gtk_entry_get_text(GTK_ENTRY(c)));
-        strcpy(nouveau_poids,gtk_entry_get_text(GTK_ENTRY(d)));
-        strcpy(nouveau_taille,gtk_entry_get_text(GTK_ENTRY(e)));
-        strcpy(nouveau_maladie,gtk_entry_get_text(GTK_ENTRY(f)));
-        DeleteLine(index_row_selected[0],1);
-        ajouter(nouveau_nom,nouveau_prenom,nouveau_age,nouveau_poids,nouveau_taille,nouveau_maladie);
-        window_modifier_fiche_medicale_medecin=lookup_widget(objet_graphique,"window_modifier_fiche_medicale_medecin");
-        gtk_widget_hide(window_modifier_fiche_medicale_medecin);
-        window_fiche_medicale_medecin=create_window_fiche_medicale_medecin();
-        gtk_widget_show (window_fiche_medicale_medecin);
-        List_View=lookup_widget(window_fiche_medicale_medecin,"treeview1");
-        afficher1(List_View);
-}
-
-
-void on_button_entrer_supprimer_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *window_supprimer_fiche_medicale_medecin,*list_view,*window_fiche_medicale_medecin;
-        DeleteLine(index_row_selected[0],1);
-        window_supprimer_fiche_medicale_medecin=lookup_widget(objet_graphique,"window_supprimer_fiche_medicale_medecin");
-        window_fiche_medicale_medecin=create_window_fiche_medicale_medecin();
-        gtk_widget_hide (window_supprimer_fiche_medicale_medecin);
-        gtk_widget_show(window_fiche_medicale_medecin);
-        list_view=lookup_widget(window_fiche_medicale_medecin,"treeview1");
-        afficher1(list_view);
-}
-
-void on_button_retour_supprimer_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *window_supprimer_fiche_medicale_medecin,*List_View;
-        GtkWidget *window_fiche_medicale_medecin;
-        window_supprimer_fiche_medicale_medecin= lookup_widget(objet_graphique,"window_supprimer_fiche_medicale_medecin");
-        window_fiche_medicale_medecin=create_window_fiche_medicale_medecin();
-        gtk_widget_show (window_fiche_medicale_medecin);
-        gtk_widget_hide (window_supprimer_fiche_medicale_medecin);
-        List_View=lookup_widget(window_fiche_medicale_medecin,"treeview1");
-        afficher1(List_View);
-}
-
-void on_treeview1_row_activated(GtkTreeView *treeview,GtkTreePath *path,GtkTreeViewColumn *column,gpointer userdata) 
-{
-
-   GtkTreeIter iter;
-   GtkTreeModel *model = gtk_tree_view_get_model(treeview);
-   GtkTreeSelection * tsel = gtk_tree_view_get_selection (treeview);
-   GtkTreeModel * tm ;
-   if (gtk_tree_model_get_iter(model, &iter, path)) {
-      gtk_tree_model_get (GTK_TREE_MODEL(model), &iter, 0, &nom,
-                        1, &prenom,
-                        2, &age,
-                        3, &poids,
-                        4, &taille,
-                        5, &maladie,
-                       -1);
-
-   }
-   if ( gtk_tree_selection_get_selected ( tsel , &tm , &iter ) )
-      {
-      path = gtk_tree_model_get_path ( tm , &iter ) ;
-      index_row_selected = gtk_tree_path_get_indices ( path ) ;
-      
-   
-      }
-}
-
-
-
-void on_treeview3_row_activated(GtkTreeView *treeview,GtkTreePath *path,GtkTreeViewColumn *column,gpointer user_data)
-{
-
-
-   GtkTreeIter iter;
-   GtkTreeModel *model = gtk_tree_view_get_model(treeview);
-   GtkTreeSelection * tsel = gtk_tree_view_get_selection (treeview);
-   GtkTreeModel * tm ;
-   if (gtk_tree_model_get_iter(model, &iter, path)) {
-      gtk_tree_model_get (GTK_TREE_MODEL(model), &iter,  0, &g_jour_disponibilites,
-                        1, &g_mois_disponibilites,
-                        2, &g_annees_disponibilites,
-                        3, &g_heure_disponibilites,
-                       -1);
-   g_print ("g_jour_disponibilites: %s\n", g_jour_disponibilites);
-   g_print ("g_mois_disponibilites: %s\n", g_mois_disponibilites);
-   }
-   if ( gtk_tree_selection_get_selected ( tsel , &tm , &iter ) )
-      {
-      path = gtk_tree_model_get_path ( tm , &iter ) ;
-      index_row_selected = gtk_tree_path_get_indices ( path ) ;
-      
-   g_print ("selected row is: %d\n", index_row_selected[0]);
-      }
-
-
-
-
-
+gtk_widget_destroy(GTK_WIDGET(lookup_widget(objet_graphique,"window1_admin")));
 
 }
 
 
-void on_spinbutton5_changed(GtkSpinButton *editable,gpointer user_data)
-{
-       
-        int tmp = gtk_spin_button_get_value( editable );
-        sprintf(jour_disponibilites, "%d", tmp);
-}
-
-
-void on_spinbutton6_changed(GtkSpinButton *editable,gpointer user_data)
-{
-       
-        int tmp = gtk_spin_button_get_value( editable );
-        sprintf(mois_disponibilites, "%d", tmp);
-
-
-
-}
-
-
-void on_spinbutton7_changed(GtkSpinButton *editable,gpointer user_data)
-{
-         
-        int tmp = gtk_spin_button_get_value( editable );
-        sprintf(annees_disponibilites, "%d", tmp);
-
-    
-}
-
-
-
-
-
-void on_comboboxentry6_changed(GtkComboBox *combobox,gpointer user_data)
-{
-        gchar *tmp = gtk_combo_box_get_active_text( combobox );
-        char *ret = (&tmp[0]);
-        strcpy(heure_disponibilites,ret);
-       
-        
-   
-   
-}
-
-
-void on_button_entrer_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
+void
+on_button3_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
 {
 
-g_print ("jour_disponibilites: %s\n", jour_disponibilites);
-g_print ("mois_disponibilites: %s\n", mois_disponibilites);
-g_print ("annees_disponibilites: %s\n", annees_disponibilites);
-
-GtkWidget *window_disponibilites_medecin,*List_View;
-GtkWidget *window_ajouter_disponibilites_medecin;
-
-ajouter_dispo(jour_disponibilites,mois_disponibilites,annees_disponibilites,heure_disponibilites);
-window_ajouter_disponibilites_medecin= lookup_widget(objet_graphique,"window_ajouter_disponibilites_medecin");
-window_disponibilites_medecin=create_window_disponibilites_medecin();
-gtk_widget_show (window_disponibilites_medecin);
-gtk_widget_hide (window_ajouter_disponibilites_medecin);
-List_View=lookup_widget(window_disponibilites_medecin,"treeview3");
-afficher3(List_View);
-}
+GtkWidget *window3_admin , *window2_admin ;
 
 
-void on_button_entrer_modifier_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *a,*b,*c,*d;
-        GtkWidget *current, *hr,*window_disponibilites_medecin,*window_modifier_disponibilites_medecin,*List_View;
-        char jour[50], mois[50], annee[50] ;
-        char Heurs[50];
-        a=lookup_widget(objet_graphique,"entry40");
-        b=lookup_widget(objet_graphique,"entry41");
-        c=lookup_widget(objet_graphique,"entry42");
-        d=lookup_widget(objet_graphique,"entry43");
-     
+window2_admin=lookup_widget(objet_graphique,"window2_admin");
 
-
-        strcpy(jour,gtk_entry_get_text(GTK_ENTRY(a)));
-        strcpy(mois,gtk_entry_get_text(GTK_ENTRY(b)));
-        strcpy(annee,gtk_entry_get_text(GTK_ENTRY(c)));
-        
-        strcpy(Heurs,gtk_entry_get_text(GTK_ENTRY(d)));
-
-
-
-
-DeleteLine(index_row_selected[0],2);
-ajouter_dispo(jour,mois,annee,Heurs);
-
-current=lookup_widget(objet_graphique,"window_modifier_disponibilites_medecin");
-window_disponibilites_medecin=create_window_disponibilites_medecin();
-gtk_widget_show (window_disponibilites_medecin);
-gtk_widget_hide(current);  
-List_View=lookup_widget(window_disponibilites_medecin,"treeview3");
-afficher3(List_View);
-
-}
-void on_button_modifier_disponiblites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-
-        GtkWidget *Widget_jour,*Widget_mois,*Widget_annee,*Widget_heure;
-        GtkWidget *window_modifier_disponibilites_medecin;
-        GtkWidget *window_disponibilites_medecin;
-        
-        window_disponibilites_medecin=lookup_widget(objet_graphique,"window_disponibilites_medecin");
-        window_modifier_disponibilites_medecin=create_window_modifier_disponibilites_medecin();
-        Widget_jour=lookup_widget(window_modifier_disponibilites_medecin,"entry40");
-        Widget_mois=lookup_widget(window_modifier_disponibilites_medecin,"entry41");
-        Widget_annee=lookup_widget(window_modifier_disponibilites_medecin,"entry42");
-        Widget_heure=lookup_widget(window_modifier_disponibilites_medecin,"entry43");
-
-        gtk_entry_set_text(GTK_ENTRY (Widget_jour),_(g_jour_disponibilites));
-        gtk_entry_set_text(GTK_ENTRY (Widget_mois),_(g_mois_disponibilites));
-        gtk_entry_set_text(GTK_ENTRY (Widget_annee),_(g_annees_disponibilites));
-        gtk_entry_set_text(GTK_ENTRY (Widget_heure),_(g_heure_disponibilites));
-
-
-        gtk_widget_show (window_modifier_disponibilites_medecin);
-        gtk_widget_hide (window_disponibilites_medecin);
-}
-
-void on_button_entrer_supprimer_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-GtkWidget *current, *hr,*window_disponibilites_medecin,*List_View;
-DeleteLine(index_row_selected[0],2);
-current=lookup_widget(objet_graphique,"window_supprimer_disponibilites_medecin");
-window_disponibilites_medecin=create_window_disponibilites_medecin();
-gtk_widget_show (window_disponibilites_medecin);
-gtk_widget_hide(current);  
-List_View=lookup_widget(window_disponibilites_medecin,"treeview3");
-afficher3(List_View);
-}
-
-
-void on_button_retour_supprimer_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-GtkWidget *window_disponibilites_medecin,*List_View;
-GtkWidget *window_supprimer_disponibilites_medecin;
-window_supprimer_disponibilites_medecin= lookup_widget(objet_graphique,"window_supprimer_disponibilites_medecin");
-window_disponibilites_medecin=create_window_disponibilites_medecin();
-gtk_widget_show (window_disponibilites_medecin);
-gtk_widget_hide (window_supprimer_disponibilites_medecin);
-List_View=lookup_widget(window_disponibilites_medecin,"treeview3");
-afficher3(List_View);
-}
-
-void on_button_retour_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-        GtkWidget *window_disponibilites_medecin,*List_View;
-        GtkWidget *window_getion_medecin;
-        window_disponibilites_medecin= lookup_widget(objet_graphique,"window_disponibilites_medecin");
-        window_getion_medecin=create_window_getion_medecin();
-        gtk_widget_show (window_getion_medecin);
-        gtk_widget_hide (window_disponibilites_medecin);
-;
-}
-
-
-void on_button_ajouter_disponibilites_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-GtkWidget *window_disponibilites_medecin;
-GtkWidget *window_ajouter_disponibilites_medecin;
-window_disponibilites_medecin= lookup_widget(objet_graphique,"window_disponibilites_medecin");
-window_ajouter_disponibilites_medecin=create_window_ajouter_disponibilites_medecin();
-gtk_widget_show (window_ajouter_disponibilites_medecin);
-gtk_widget_hide (window_disponibilites_medecin);
-}
-
-
-void on_button_retour_ajouter_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-GtkWidget *window_disponibilites_medecin,*List_View;
-GtkWidget *window_ajouter_disponibilites_medecin;
-window_ajouter_disponibilites_medecin= lookup_widget(objet_graphique,"window_ajouter_disponibilites_medecin");
-window_disponibilites_medecin=create_window_disponibilites_medecin();
-gtk_widget_show (window_disponibilites_medecin);
-gtk_widget_hide (window_ajouter_disponibilites_medecin);
-List_View=lookup_widget(window_disponibilites_medecin,"treeview3");
-afficher3(List_View);
-}
-
-void on_button_supprimer_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
-{
-
-
-        GtkWidget *Widget_jour,*Widget_mois,*Widget_annee,*Widget_heure;
-        GtkWidget *window_supprimer_disponibilites_medecin;
-        GtkWidget *window_disponibilites_medecin;
-        
-        window_disponibilites_medecin=lookup_widget(objet_graphique,"window_disponibilites_medecin");
-        window_supprimer_disponibilites_medecin=create_window_supprimer_disponibilites_medecin();
-        Widget_jour=lookup_widget(window_supprimer_disponibilites_medecin,"entry44");
-        Widget_mois=lookup_widget(window_supprimer_disponibilites_medecin,"entry45");
-        Widget_annee=lookup_widget(window_supprimer_disponibilites_medecin,"entry46");
-        Widget_heure=lookup_widget(window_supprimer_disponibilites_medecin,"entry47");
-
-        gtk_entry_set_text(GTK_ENTRY (Widget_jour),_(g_jour_disponibilites));
-        gtk_entry_set_text(GTK_ENTRY (Widget_mois),_(g_mois_disponibilites));
-        gtk_entry_set_text(GTK_ENTRY (Widget_annee),_(g_annees_disponibilites));
-        gtk_entry_set_text(GTK_ENTRY (Widget_heure),_(g_heure_disponibilites));
-
-
-        gtk_widget_show (window_supprimer_disponibilites_medecin);
-        gtk_widget_hide (window_disponibilites_medecin);
+gtk_widget_destroy(window2_admin);
+window3_admin=create_window3_admin();
+gtk_widget_show(window3_admin);
 
 }
 
 
 
 
-void on_button_retour_modifier_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data)
+void    on_button5_admin_clicked                                 (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+
 {
-GtkWidget *window_disponibilites_medecin,*List_View;
-GtkWidget *window_modifier_disponibilites_medecin;
-window_modifier_disponibilites_medecin= lookup_widget(objet_graphique,"window_modifier_disponibilites_medecin");
-window_disponibilites_medecin=create_window_disponibilites_medecin();
-gtk_widget_show (window_disponibilites_medecin);
-gtk_widget_hide (window_modifier_disponibilites_medecin);
-List_View=lookup_widget(window_disponibilites_medecin,"treeview3");
-afficher3(List_View);
+GtkWidget *window1_admin , *window2_admin ;
+
+
+window2_admin=lookup_widget(objet_graphique,"window2_admin");
+
+gtk_widget_destroy(window2_admin);
+window1_admin=create_window1_admin();
+gtk_widget_show(window1_admin);
+
 }
+
+
+void
+on_button7_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window3_admin , *window4_admin ;
+
+
+window3_admin=lookup_widget(objet_graphique,"window3_admin");
+
+gtk_widget_destroy(window3_admin);
+window4_admin=create_window4_admin();
+gtk_widget_show(window4_admin);
+
+}
+
+
+
+
+void
+on_button8_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+
+GtkWidget *window2_admin;
+GtkWidget *window3_admin;
+
+window3_admin=lookup_widget(objet_graphique,"window3_admin");
+gtk_widget_destroy(window3_admin);
+window2_admin=create_window2_admin();
+gtk_widget_show(window2_admin);
+}
+
+
+void
+on_button9_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window4_admin;
+GtkWidget *window3_admin;
+
+window4_admin=lookup_widget(objet_graphique,"window4_admin");
+gtk_widget_destroy(window4_admin);
+window3_admin=create_window3_admin();
+gtk_widget_show(window3_admin);
+}
+
+
+
+
+
+
+
+
+void
+on_button10_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window4_admin;
+GtkWidget *window5_admin;
+
+window4_admin=lookup_widget(objet_graphique,"window4_admin");
+gtk_widget_destroy(window4_admin);
+window5_admin=create_window5_admin();
+gtk_widget_show(window5_admin);
+}
+
+
+void
+on_button14_admin_clicked                    (GtkWidget      *objet_graphique,
+ gpointer         user_data)
+{
+GtkWidget *window4_admin;
+GtkWidget *window5_admin;
+
+window5_admin=lookup_widget(objet_graphique,"window5_admin");
+gtk_widget_destroy(window5_admin);
+window4_admin=create_window4_admin();
+gtk_widget_show(window4_admin);
+}
+
+
+void
+on_button13_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+char chemin[]="/home/dorra/Projects/project2/src/staffs.txt";
+
+ staff P;
+ Date dt_nais;
+
+GtkWidget *window4_admin;
+GtkWidget *window5_admin;
+
+GtkWidget *a;
+GtkWidget *b;
+GtkWidget *c;
+GtkWidget *d;
+GtkWidget *e;
+GtkWidget *f;
+
+
+
+a = lookup_widget(objet_graphique,"entry3_admin");
+b= lookup_widget(objet_graphique,"entry5_admin");
+c= lookup_widget(objet_graphique,"entry6_admin");
+
+d= lookup_widget(objet_graphique,"spinbutton19_admin");
+e= lookup_widget(objet_graphique,"spinbutton20_admin");
+f= lookup_widget(objet_graphique,"spinbutton21_admin");
+
+strcpy(P.Login, gtk_entry_get_text(GTK_ENTRY(a)));
+strcpy(P.Role, gtk_entry_get_text(GTK_ENTRY(b)));
+strcpy(P.Sexe, gtk_entry_get_text(GTK_ENTRY(c)));
+
+P.dt_nais.jour=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (d));
+P.dt_nais.mois=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (e));
+P.dt_nais.annee=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (f));
+
+
+enregistrer_staff(P);
+
+window5_admin=lookup_widget(objet_graphique,"window5_admin");
+gtk_widget_destroy(window5_admin);
+window4_admin=create_window4_admin();
+gtk_widget_show(window4_admin);
+
+}
+
+
+
+
+void
+on_button16_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+
+{
+GtkWidget *window4_admin;
+GtkWidget *window6_admin;
+
+window6_admin=lookup_widget(objet_graphique,"window6_admin");
+gtk_widget_destroy(window6_admin);
+window4_admin=create_window4_admin();
+gtk_widget_show(window4_admin);
+}
+
+
+
+
+void
+on_button17_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window2_admin;
+GtkWidget *window7_admin;
+
+window2_admin=lookup_widget(objet_graphique,"window2_admin");
+gtk_widget_destroy(window2_admin);
+window7_admin=create_window7_admin();
+gtk_widget_show(window7_admin);
+}
+
+
+void
+on_button20_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window2_admin;
+GtkWidget *window7_admin;
+
+window7_admin=lookup_widget(objet_graphique,"window7_admin");
+gtk_widget_destroy(window7_admin);
+window2_admin=create_window2_admin();
+gtk_widget_show(window2_admin);
+}
+
+
+void
+on_button18_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window8_admin;
+GtkWidget *window7_admin;
+
+window7_admin=lookup_widget(objet_graphique,"window7_admin");
+gtk_widget_destroy(window7_admin);
+window8_admin=create_window8_admin();
+gtk_widget_show(window8_admin);
+}
+
+
+
+
+
+
+void
+on_button23_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window8_admin;
+GtkWidget *window7_admin;
+
+window8_admin=lookup_widget(objet_graphique,"window8_admin");
+gtk_widget_destroy(window8_admin);
+window7_admin=create_window7_admin();
+gtk_widget_show(window7_admin);
+}
+
+
+
+void
+on_button24_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window4_admin;
+GtkWidget *window9_admin;
+
+window4_admin=lookup_widget(objet_graphique,"window4_admin");
+gtk_widget_destroy(window4_admin);
+window9_admin=create_window9_admin();
+gtk_widget_show(window9_admin);
+}
+
+
+
+
+void
+on_button26_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window9_admin;
+GtkWidget *window7_admin;
+
+window9_admin=lookup_widget(objet_graphique,"window9_admin");
+gtk_widget_destroy(window9_admin);
+window7_admin=create_window7_admin();
+gtk_widget_show(window7_admin);
+}
+
+
+void
+on_button27_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+
+char chemin[]="/home/dorra/Projects/project2/src/staffs.txt";
+evt a;
+
+GtkWidget *window7_admin;
+GtkWidget *window9_admin;
+GtkWidget *b;
+GtkWidget *c;
+GtkWidget *d;
+
+b= lookup_widget(objet_graphique,"entry10_admin");
+c= lookup_widget(objet_graphique,"entry26_admin");
+d= lookup_widget(objet_graphique,"entry27_admin");
+
+
+strcpy(a.nom, gtk_entry_get_text(GTK_ENTRY(b)));
+strcpy(a.date, gtk_entry_get_text(GTK_ENTRY(c)));
+strcpy(a.prix, gtk_entry_get_text(GTK_ENTRY(d)));
+modifier_evt(a);
+
+window9_admin=lookup_widget(objet_graphique,"window9_admin");
+gtk_widget_destroy(window9_admin);
+window7_admin=create_window7_admin();
+gtk_widget_show(window7_admin);
+}
+
+
+void
+on_button29_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window7_admin ;
+GtkWidget *window12_admin ;
+GtkWidget *treeview2_admin;
+
+window7_admin=lookup_widget(objet_graphique,"window7_admin");
+gtk_widget_destroy(window7_admin);
+
+window12_admin=lookup_widget(objet_graphique,"window12_admin");
+window12_admin=create_window12_admin();
+gtk_widget_show (window12_admin);
+
+treeview2_admin=lookup_widget(window12_admin,"treeview2_admin");
+
+
+afficher_evt(treeview2_admin);
+}
+
+
+void
+on_button28_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window7_admin;
+GtkWidget *window10_admin;
+
+window7_admin=lookup_widget(objet_graphique,"window7_admin");
+gtk_widget_destroy(window7_admin);
+window10_admin=create_window10_admin();
+gtk_widget_show(window10_admin);
+}
+
+
+void
+on_button30_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+
+char chemin[]="/home/dorra/Projects/project2/src/evts.txt";
+char k_nom[50];
+char k_date[50];
+char k_prix[50];
+
+GtkWidget *window7_admin;
+GtkWidget *window10_admin;
+
+
+GtkWidget *b;
+GtkWidget *c;
+GtkWidget *d;
+
+b= lookup_widget(objet_graphique,"entry14_admin");
+c= lookup_widget(objet_graphique,"entry30_admin");
+d= lookup_widget(objet_graphique,"entry31_admin");
+
+
+strcpy(k_nom, gtk_entry_get_text(GTK_ENTRY(b)));
+strcpy(k_date, gtk_entry_get_text(GTK_ENTRY(c)));
+strcpy(k_prix, gtk_entry_get_text(GTK_ENTRY(d)));
+supprimer_evt( k_nom, k_date, k_prix);
+
+window10_admin=lookup_widget(objet_graphique,"window10_admin");
+gtk_widget_destroy(window10_admin);
+window7_admin=create_window7_admin();
+gtk_widget_show(window7_admin);
+
+
+}
+
+
+void
+on_button31_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window7_admin;
+GtkWidget *window10_admin;
+
+window10_admin=lookup_widget(objet_graphique,"window10_admin");
+gtk_widget_destroy(window10_admin);
+window7_admin=create_window7_admin();
+gtk_widget_show(window7_admin);
+}
+
+
+void
+on_button32_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window7_admin;
+GtkWidget *window9_admin;
+
+window7_admin=lookup_widget(objet_graphique,"window7_admin");
+gtk_widget_destroy(window7_admin);
+window9_admin=create_window9_admin();
+gtk_widget_show(window9_admin);
+}
+
+
+void
+on_button35_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window7_admin;
+GtkWidget *window12_admin;
+window12_admin=lookup_widget(objet_graphique,"window12_admin");
+gtk_widget_destroy(window12_admin);
+
+window7_admin=lookup_widget(objet_graphique,"window7_admin");
+window7_admin=create_window7_admin();
+gtk_widget_show (window7_admin);
+}
+
+
+void
+on_button36_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window3_admin;
+GtkWidget *window13_admin;
+
+window13_admin=lookup_widget(objet_graphique,"window13_admin");
+gtk_widget_destroy(window13_admin);
+window3_admin=create_window3_admin();
+gtk_widget_show(window3_admin);
+}
+
+
+void
+on_button37_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window4_admin;
+GtkWidget *window5_admin;
+
+window4_admin=lookup_widget(objet_graphique,"window4_admin");
+gtk_widget_destroy(window4_admin);
+window5_admin=create_window5_admin();
+gtk_widget_show(window5_admin);
+}
+
+
+void
+on_button38_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+
+
+char chemin[]="/home/dorra/Projects/project2/src/adh.txt";
+char k_login[50];
+char k_sexe[50];
+
+
+GtkWidget *window3_admin;
+GtkWidget *window13_admin;
+GtkWidget *b;
+GtkWidget *c;
+
+
+b= lookup_widget(objet_graphique,"entry20_admin");
+c= lookup_widget(objet_graphique,"entry33_admin");
+
+
+strcpy(k_login, gtk_entry_get_text(GTK_ENTRY(b)));
+strcpy(k_sexe, gtk_entry_get_text(GTK_ENTRY(c)));
+supprimer_adh(k_login,k_sexe);
+
+window13_admin=lookup_widget(objet_graphique,"window13_admin");
+gtk_widget_destroy(window13_admin);
+window3_admin=create_window3_admin();
+gtk_widget_show(window3_admin);
+}
+
+
+
+
+
+void
+on_button39_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window3_admin;
+GtkWidget *window14_admin;
+
+window14_admin=lookup_widget(objet_graphique,"window14_admin");
+gtk_widget_destroy(window14_admin);
+window3_admin=create_window3_admin();
+gtk_widget_show(window3_admin);
+}
+
+
+void
+on_button40_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+
+
+char chemin[]="/home/dorra/Projects/project2/src/adh.txt";
+adh a;
+GtkWidget *window3_admin;
+GtkWidget *window14_admin;
+
+GtkWidget *b;
+GtkWidget *c;
+
+b=lookup_widget(objet_graphique,"entry28_admin");
+c=lookup_widget(objet_graphique,"entry29_admin");
+
+strcpy(a.Login,gtk_entry_get_text(GTK_ENTRY(b)));
+strcpy(a.Sexe,gtk_entry_get_text(GTK_ENTRY(c)));
+enregistrer_adh(a);
+window14_admin=lookup_widget(objet_graphique,"window14_admin");
+gtk_widget_destroy(window14_admin);
+window3_admin=create_window3_admin();
+gtk_widget_show(window3_admin);
+}
+
+
+void
+on_button41_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+char chemin[]="/home/dorra/Projects/project2/src/evts.txt";
+evt k ;
+
+GtkWidget *window7_admin;
+GtkWidget *window8_admin;
+GtkWidget *a;
+GtkWidget *b;
+GtkWidget *c;
+a=lookup_widget(objet_graphique,"entry8_admin");
+b=lookup_widget(objet_graphique,"entry24_admin");
+c=lookup_widget(objet_graphique,"entry25_admin");
+strcpy(k.nom,gtk_entry_get_text(GTK_ENTRY(a)));
+strcpy(k.date,gtk_entry_get_text(GTK_ENTRY(b)));
+strcpy(k.prix,gtk_entry_get_text(GTK_ENTRY(c)));
+ajouter_evt(k);
+
+window8_admin=lookup_widget(objet_graphique,"window8_admin");
+gtk_widget_destroy(window8_admin);
+window7_admin=create_window7_admin();
+gtk_widget_show(window7_admin);
+}
+
+
+void
+on_button42_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window3_admin;
+GtkWidget *window14_admin;
+
+window3_admin=lookup_widget(objet_graphique,"window3_admin");
+gtk_widget_destroy(window3_admin);
+window14_admin=create_window14_admin();
+gtk_widget_show(window14_admin);
+}
+
+
+void
+on_button43_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data)
+{
+GtkWidget *window3_admin;
+GtkWidget *window13_admin;
+
+window3_admin=lookup_widget(objet_graphique,"window3_admin");
+gtk_widget_destroy(window3_admin);
+window13_admin=create_window13_admin();
+gtk_widget_show(window13_admin);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

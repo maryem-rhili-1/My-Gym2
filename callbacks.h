@@ -1,70 +1,172 @@
-void on_button1_clicked (GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_Gerer_les_fiches_medicales_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_Gerer_les_rendez_vous_medecin_clicked (GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_Gerer_les_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_ajouter_fiche_medicale_medecin_clicked (GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_supprimer_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_modifier_fiche_medicale_medecin_clicked(GtkWidget *objet_graphic,gpointer  user_data);
-
-void on_button_retour_affichage_fiche_medicale_medecin_clicked(GtkWidget *objet_graphic,gpointer  user_data);
-
-void on_treeview1_row_activated(GtkTreeView       *treeview, 
-                                GtkTreePath       *path, 
-                                GtkTreeViewColumn *column,
-                                gpointer userdata);
-
-void on_button_entrer_ajouter_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_retour_ajouter_fiche_medicale_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_retour_rendez_vous_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_retour_modifier_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_entrer_modifier_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_entrer_supprimer_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_retour_supprimer_fiche_medicale_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_treeview3_row_activated(GtkTreeView *treeview,GtkTreePath *path,GtkTreeViewColumn *column,gpointer user_data);
-
-void on_spinbutton5_changed(GtkSpinButton *editable,gpointer user_data);
-
-void on_spinbutton6_changed(GtkSpinButton *editable,gpointer user_data);
-
-void on_spinbutton7_changed(GtkSpinButton *editable,gpointer user_data);
-
-void on_comboboxentry6_changed(GtkComboBox *combobox,gpointer user_data);
-
-void on_button_retour_disponibilite_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_entrer_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_entrer_modifier_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_entrer_supprimer_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_retour_supprimer_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_retour_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_ajouter_disponibilites_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_retour_ajouter_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_supprimer_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void on_button_modifier_disponiblites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
-
-void supprimer_dispo(char jour[50], char mois[50], char annee[50], char Heurs [50]);
+#include <gtk/gtk.h>
 
 
+void
+on_button1_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+void
+on_button2_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+void
+on_button3_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
 
-void on_button_retour_modifier_disponibilites_medecin_clicked(GtkWidget *objet_graphique,gpointer user_data);
+void    on_button5_admin_clicked                                 (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button7_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button8_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button9_admin_clicked                     (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button10_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button14_admin_clicked                    (GtkWidget      *objet_graphique,
+ gpointer         user_data);
+
+void
+on_button13_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button16_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button17_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button20_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+
+void
+on_button18_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+
+void
+on_button23_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button24_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button26_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button27_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button29_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button28_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button30_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button31_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+void
+on_button32_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button35_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button36_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button37_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button38_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button39_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+
+
+void
+on_button40_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button41_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button42_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+void
+on_button43_admin_clicked                    (GtkWidget      *objet_graphique,
+                                        gpointer         user_data);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

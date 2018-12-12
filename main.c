@@ -15,19 +15,7 @@
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *window_authentification;
-  GtkWidget *window_getion_medecin;
-  GtkWidget *window_fiche_medicale_medecin;
-  GtkWidget *window_ajouter_fiche_medicale_medecin;
-  GtkWidget *window_rendez_vous_medecin;
-  GtkWidget *window_modifier_fiche_medicale_medecin;
-  GtkWidget *window_supprimer_fiche_medicale_medecin;
-  GtkWidget *window_disponibilites_medecin;
-  GtkWidget *window_ajouter_disponibilites_medecin;
-  GtkWidget *window_modifier_disponibilites_medecin;
-  GtkWidget *window_supprimer_disponibilites_medecin;
-  GtkWidget *window7;
-  GtkWidget *window8;
+  GtkWidget *window1_admin;
 
 #ifdef ENABLE_NLS
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
@@ -45,9 +33,8 @@ main (int argc, char *argv[])
    * (except popup menus), just so that you see something after building
    * the project. Delete any components that you don't want shown initially.
    */
-  window_authentification = create_window_authentification ();
-  gtk_widget_show (window_authentification);
- 
+  window1_admin = create_window1_admin ();
+  gtk_widget_show (window1_admin);
 
   gtk_main ();
   return 0;
